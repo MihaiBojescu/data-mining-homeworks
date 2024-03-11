@@ -10,6 +10,12 @@ $ source ./venv/bin/activate
 $ pip install -r ./requirements.txt
 ```
 
+Or just:
+
+```sh
+$ source ./setup.sh
+```
+
 After this, the environment should have the dependencies set up.
 
 ## Running
