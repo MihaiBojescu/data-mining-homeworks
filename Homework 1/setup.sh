@@ -6,12 +6,11 @@ if [ ! -d "./venv" ]; then
     python3 -m venv venv
 fi
 
+export R_LIBS_USER=~/.r
 
 r_setup_script=$(cat <<-END
-    .libPaths(c("~/.r", .libPaths()));
-    install.packages("IRkernel", repos="https://cran.uni-muenster.de/");
-    install.packages("tourr", repos="https://cran.uni-muenster.de/");
-    IRkernel::installspec();
+    if (!require("tourr")) install.packages("tourr", repos="https://cran.uni-muenster.de/");
+    if (!require("gifski")) install.packages("gifski", repos="https://cran.uni-muenster.de/");
 END
 )
 
