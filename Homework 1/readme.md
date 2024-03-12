@@ -29,14 +29,15 @@ This repository contains statistics and charts on dataset for obesity. Here we p
 From the univariate analysis we can obtain the following details:
 1. Age is leptokurtic and right skewed. This indicates that our dataset is quite targeted on a younger population.
 1. Height and weight are mesokurtic and symmetric. This indicates that our dataset has a wide variation in its data.
-1. Many of the individuals in the available dataset already present a family member that face this issue in their family, thus indicating that this also might be based on genetics.
+1. Many of the surveyed individuals in the available dataset already present a family member that face this issue in their family, thus indicating that this also might be based on genetics.
+1. Many of the surveyed individuals are frequently consuming high-caloric foods.
 
 From the multivariate analysis we can obtain the following:
 1. Based on scatter-plots (screenshot #1 below) and boxplots (screenshot #2, #3 below), the attributes with the highest prediction power are:
     1. Height
     1. Weight
     1. Age
-1. Based on the ANOVA score, we could also observe that FCVC (Frequency of consumption of vegetables) is inversely correlated with obesity, thus vegetarians _might_ be on the normal weight category.
+1. Based on the ANOVA score (screenshot #4 below), we could also observe that FCVC (Frequency of consumption of vegetables) is inversely correlated with obesity, thus vegetarians _might_ be on the normal weight category.
 
 ## Screenshots
 
