@@ -66,3 +66,9 @@ From the multivariate analysis we can obtain the following:
 * The ANOVA test confirm what the plots above show us in regards to the Weight, Height and Age variables. Also, it shows that FCVC also has a good predictive power.
 
 ![ANOVA score](./resources/anova_score.png)
+
+### Screenshot #4: CAEC, Gender, family_history_with_overweight, CALC
+
+![Chi2 score](./resources/chi2_score.png)
+
+* The CHI2 score shows that CAEC, Gender, family_history_with_overweight and CALC
