@@ -38,7 +38,8 @@ From the multivariate analysis we can obtain the following:
     1. Weight
     1. Age
 1. Based on the ANOVA score (screenshot #4 below), we could also observe that FCVC (Frequency of consumption of vegetables) is inversely correlated with obesity, thus vegetarians _might_ be on the normal weight category.
-1. Many of the surveyed individuals don't smoke if they consume lots of vegetables.
+1. Many of the surveyed individuals that consume foods with high calories don't smoke.
+1. Many of the surveyed individuals that consume foods with high calories don't monitor their calories intake.
 
 ## Screenshots
 
