@@ -1,5 +1,5 @@
 import typing as t
-from associator.types import Association, DataSeries, DataSeriesValue
+from .types import Association, DataSeries, DataSeriesValue
 
 
 def associate(

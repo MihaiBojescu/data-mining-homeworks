@@ -1,9 +1,9 @@
 import typing as t
 from multiprocessing import Pool
 from multiprocessing.pool import Pool as PoolClass
-from associator.types import Dataset
-from associator.associate import associate
-from associator.utils import make_combinations
+from .types import Dataset
+from .associate import associate
+from .utils import make_combinations
 
 
 class Associator(t.Generic[Dataset]):
