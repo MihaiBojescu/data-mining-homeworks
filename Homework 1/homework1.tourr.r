@@ -14,8 +14,8 @@ read <- function() {
 
 filter <- function(data) {
     numerical_variables = c(
+        "Height",
         "Weight",
-        "FAF",
         "NCP"
     )
     filtered_data <- data[, numerical_variables]
@@ -43,10 +43,18 @@ render <- function(normalised_data, data) {
         normalised_data,
         tour_path = guided_tour(out_index),
         display = display_xy(
-            cex = 2,
             col = data$NObeyesdad
         ),
-        gif_file = "./resources/animation.gif",
+        gif_file = "./resources/animation1.gif",
+        frames = 60 * 5
+    )
+    render_gif(
+        normalised_data,
+        tour_path = guided_tour(lda_pp(data$NObeyesdad)),
+        display = display_xy(
+            col = data$NObeyesdad
+        ),
+        gif_file = "./resources/animation2.gif",
         frames = 60 * 5
     )
 }
