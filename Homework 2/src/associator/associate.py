@@ -23,20 +23,20 @@ class Associator:
         Else, we cannot consider that the data series are associated
         """
 
-        association_dict: t.Dict[DataSeriesValue, t.Dict[DataSeriesValue, int]] = {}
+        support_dict: t.Dict[DataSeriesValue, t.Dict[DataSeriesValue, int]] = {}
         total_tuples = len(data_series_a.values)
         max_confidence = 0.0
 
         for entry_a, entry_b in zip(data_series_a.values, data_series_b.values):
-            if not entry_a in association_dict:
-                association_dict[entry_a] = {}
+            if not entry_a in support_dict:
+                support_dict[entry_a] = {}
 
-            if not entry_b in association_dict[entry_a]:
-                association_dict[entry_a][entry_b] = 0
+            if not entry_b in support_dict[entry_a]:
+                support_dict[entry_a][entry_b] = 0
 
-            association_dict[entry_a][entry_b] += 1
+            support_dict[entry_a][entry_b] += 1
 
-        for source in association_dict.values():
+        for source in support_dict.values():
             for destination in source.values():
                 confidence = destination / total_tuples
                 max_confidence = max(max_confidence, confidence)
