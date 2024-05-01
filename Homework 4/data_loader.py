@@ -1,6 +1,9 @@
 import os
 import pandas as pd
 import numpy as np
+from pathlib import Path
+
+PARENT_DIR = str(os.path.join(Path(__file__).parent.absolute()))
 
 
 def load_dataset(path: str, delimiter: str) -> tuple[np.array, np.array]:
@@ -12,24 +15,24 @@ def load_dataset(path: str, delimiter: str) -> tuple[np.array, np.array]:
 
 
 def dataset_2d_10c() -> tuple[np.array, np.array]:
-    return load_dataset(os.path.join(__file__, "./data/2d-10c.dat"), " ")
+    return load_dataset(os.path.join(PARENT_DIR, "./data/2d-10c.dat"), " ")
 
 
 def dataset_iris() -> tuple[np.array, np.array]:
-    return load_dataset(os.path.join(__file__, "./data/iris.csv"), ",")
+    return load_dataset(os.path.join(PARENT_DIR, "./data/iris.csv"), ",")
 
 
 def dataset_long() -> tuple[np.array, np.array]:
-    return load_dataset(os.path.join(__file__, "./data/long.dat"), " ")
+    return load_dataset(os.path.join(PARENT_DIR, "./data/long.dat"), " ")
 
 
 def dataset_order2_3clust() -> tuple[np.array, np.array]:
-    return load_dataset(os.path.join(__file__, "./data/order2-3clust.csv"), ",")
+    return load_dataset(os.path.join(PARENT_DIR, "./data/order2-3clust.csv"), ",")
 
 
 def dataset_smile() -> tuple[np.array, np.array]:
-    return load_dataset(os.path.join(__file__, "./data/smile.csv"), ",")
+    return load_dataset(os.path.join(PARENT_DIR, "./data/smile.csv"), ",")
 
 
 def dataset_square() -> tuple[np.array, np.array]:
-    return load_dataset(os.path.join(__file__, "./data/square.dat"), " ")
+    return load_dataset(os.path.join(PARENT_DIR, "./data/square.dat"), " ")
