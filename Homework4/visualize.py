@@ -9,7 +9,7 @@ def pca_reduction(features: np.array):
     return PCA(n_components=2).fit_transform(features)
 
 
-def plot_data(features: np.array, labels: np.array):
+def plot_data(features: np.array, labels: np.array, title: str):
     assert len(labels.shape) == 1
     assert features.shape[1] >= 2
 
@@ -23,7 +23,7 @@ def plot_data(features: np.array, labels: np.array):
          "label": labels.tolist()}
     )
 
-    sns.scatterplot(features_df, x="x_component", y="y_component", hue="label")
+    sns.scatterplot(features_df, x="x_component", y="y_component", hue="label").set_title(title)
     plt.show()
 
 
