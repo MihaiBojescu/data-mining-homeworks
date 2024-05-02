@@ -16,7 +16,7 @@ def som_on_iris(map_size: Optional[tuple[int, int]] = None):
     print(f"Adjusted Random Index: "
           f"{get_adjusted_random_index(labels.reshape(-1), clusters.reshape(-1))}")
 
-    plot_data(features, clusters, "Clusters from K-Means with K=3 on SOM neuron weights")
+    plot_data(features, clusters, f"Clusters from K-Means with K=3 on SOM neuron weights{map_size if map_size else ''}")
 
 
 if __name__ == "__main__":
