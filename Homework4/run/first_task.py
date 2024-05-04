@@ -8,7 +8,8 @@ from typing import Optional
 
 def som_on_iris(map_size: Optional[tuple[int, int]] = None):
     features, labels = dataset_iris()
-    som = train_som(normalize(features), map_size)
+    features = normalize(features)
+    som = train_som(features, map_size)
     plot_u_matrix(som, title="U Matrix")
     plot_u_matrix(som, title="U Matrix with Hits", hits=True)
     clusters = k_means(som, 3)

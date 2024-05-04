@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import typing as t
+import math
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -197,5 +199,44 @@ class DatasetManager:
 def dataset_obesity() -> tuple[np.array, np.array]:
     dataset_manager = DatasetManager(os.path.join(PARENT_DIR, "./data/ObesityDataSet.csv"))
     dataset = pd.DataFrame.from_records(data=[vars(entry) for entry in dataset_manager.load_as_obj_list()])
-    features, labels = DatasetManager.process_dataframe_one_hot(dataset, ["Height", "Weight", "Age", "Gender", "family_history_with_overweight"])
-    return features.to_numpy(), labels.to_numpy()
+
+    #features, labels = DatasetManager.process_dataframe_one_hot(dataset, ["Height", "Weight", "Age", "Gender", "family_history_with_overweight"])
+    features_dataset, labels = DatasetManager.process_dataframe_one_hot(dataset, ["Height", "Weight"])
+
+    height_weight_dataset = features_dataset[["Height", "Weight"]]
+    adjusted = {
+        "AdjustedHeight": [],
+        "AdjustedWeight": []
+    }
+    origin = min(height_weight_dataset["Height"].tolist()), min(height_weight_dataset["Weight"].tolist())
+
+    for it in range(len(height_weight_dataset)):
+        height, weight = height_weight_dataset["Height"][it], height_weight_dataset["Weight"][it]
+
+        adjusted_height, adjusted_weight = rotate_matrix(origin, (height, weight), 0.01)
+
+        adjusted["AdjustedHeight"].append(adjusted_height)
+        adjusted["AdjustedWeight"].append(adjusted_weight)
+
+    adjusted["AdjustedWeight"] = MinMaxScaler(feature_range=(0, 0.1)).fit_transform(
+        np.array(adjusted["AdjustedWeight"]).reshape(-1, 1)).reshape(-1).tolist()
+
+    adjusted["AdjustedHeight"] = MinMaxScaler(feature_range=(0, 1)).fit_transform(
+        np.array(adjusted["AdjustedHeight"]).reshape(-1, 1)).reshape(-1).tolist()
+
+    adjusted_dataframe = pd.DataFrame(adjusted)
+    adjusted_dataframe.reset_index(drop=True, inplace=True)
+
+    # supplemental_features, _ = DatasetManager.process_dataframe_one_hot(dataset, ["family_history_with_overweight"])
+    # adjusted_dataframe = pd.concat([adjusted_dataframe, supplemental_features], axis=1)
+
+    return adjusted_dataframe.to_numpy(), labels.to_numpy()
+
+
+def rotate_matrix(origin: tuple[float, float], point: tuple[float, float], angle: float):
+    ox, oy = origin
+    px, py = point
+
+    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    return qx, qy

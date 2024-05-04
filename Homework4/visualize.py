@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.decomposition import PCA
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.metrics.cluster import contingency_matrix
+from sklearn.metrics import ConfusionMatrixDisplay
 
 
 def pca_reduction(features: np.array):
@@ -24,6 +26,13 @@ def plot_data(features: np.array, labels: np.array, title: str):
     )
 
     sns.scatterplot(features_df, x="x_component", y="y_component", hue="label").set_title(title)
+    plt.show()
+    
+
+def plot_contingency_matrix(ground_truth: np.array, predicted: np.array):
+    cm = contingency_matrix(ground_truth, predicted)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot()
     plt.show()
 
 
