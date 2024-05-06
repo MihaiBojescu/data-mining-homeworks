@@ -5,7 +5,7 @@ from sklearn.ensemble import IsolationForest
 
 class IsolationForestOutlierDetector:
     def __init__(self, contamination: float | str = "auto"):
-        self.__model = IsolationForest(contamination=contamination)
+        self.__model = IsolationForest(contamination=contamination, random_state=24)
 
     def build(self, features: np.array):
         self.__model = self.__model.fit(features)
