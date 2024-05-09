@@ -23,7 +23,7 @@ class Cluster:
     @property
     def full_title(self) -> str:
         adjusted_random_index = get_adjusted_random_index(self.y.reshape(-1), self.y_hat.reshape(-1))
-        return f"{self.title}. ARI: {adjusted_random_index}"
+        return f"{self.title}. ARI: {adjusted_random_index:.5f}"
 
 def run_k_means(x: list[int], nr_of_clusters: int):
     return KMeans(
@@ -60,9 +60,8 @@ def build_cluster_plots(
     title: str,
     rows=3,
 ):
-    fig, axs = plt.subplots(rows, len(all_clusters) // rows)
+    fig, axs = plt.subplots(rows, len(all_clusters) // rows, constrained_layout=True)
 
-    fig.tight_layout()
     fig.suptitle(title)
 
     for i, cluster in enumerate(all_clusters):
@@ -72,5 +71,3 @@ def build_cluster_plots(
         axs[i % rows][i // rows].set_ylabel("Y")
 
     fig.show()
-    fig.waitforbuttonpress()
-    plt.close()

@@ -64,27 +64,27 @@ def cluster_on_datasets():
             all_clusters=[
                 Cluster(title="K-Means", y=labels, y_hat=clusters_k_means),
                 Cluster(
-                    title="Expectation-Maximisation for Gaussian Mixture Models",
+                    title="EM/GMM",
                     y=labels,
                     y_hat=clusters_em_gmm,
                 ),
                 Cluster(
-                    title="Hierarchical clustering: Single linkage",
+                    title="Hierarchical, single linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_single_linkage,
                 ),
                 Cluster(
-                    title="Hierarchical clustering: Average linkage",
+                    title="Hierarchical, average linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_average_linkage,
                 ),
                 Cluster(
-                    title="Hierarchical clustering: Complete linkage",
+                    title="Hierarchical, complete linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_complete_linkage,
                 ),
                 Cluster(
-                    title=f"Hierarchical clustering: Ward linkage",
+                    title=f"Hierarchical, ward linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_ward_linkage,
                 ),
