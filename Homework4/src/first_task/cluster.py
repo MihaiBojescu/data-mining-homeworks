@@ -4,7 +4,7 @@ from sklearn.mixture import GaussianMixture
 import typing as t
 import numpy as np
 import matplotlib.pyplot as plt
-from Homework4.metrics import get_adjusted_random_index
+from src.metrics import get_adjusted_random_index
 
 
 

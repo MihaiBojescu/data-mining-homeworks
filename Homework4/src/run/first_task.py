@@ -1,4 +1,4 @@
-from Homework4.data_loader import (
+from src.data_loader import (
     dataset_iris,
     dataset_2d_10c,
     dataset_long,
@@ -6,8 +6,8 @@ from Homework4.data_loader import (
     dataset_smile,
     dataset_square,
 )
-from Homework4.data_utils import normalize
-from Homework4.first_task.cluster import (
+from src.data_utils import normalize
+from src.first_task.cluster import (
     Dataset,
     Cluster,
     run_k_means,
@@ -15,9 +15,9 @@ from Homework4.first_task.cluster import (
     run_hierarchical_clustering,
     build_cluster_plots,
 )
-from Homework4.first_task.som import train_som, plot_u_matrix, plot_torus, k_means
-from Homework4.metrics import get_adjusted_random_index
-from Homework4.visualize import plot_data
+from src.first_task.som import train_som, plot_u_matrix, plot_torus, k_means
+from src.metrics import get_adjusted_random_index
+from src.visualize import plot_data
 from typing import Optional
 
 

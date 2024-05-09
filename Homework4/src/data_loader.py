@@ -9,7 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
 
 
-PARENT_DIR = str(os.path.join(Path(__file__).parent.absolute()))
+PARENT_DIR = str(os.path.join(Path(__file__).parent.absolute(), '..'))
 
 
 def load_dataset(path: str, delimiter: str) -> tuple[np.array, np.array]:

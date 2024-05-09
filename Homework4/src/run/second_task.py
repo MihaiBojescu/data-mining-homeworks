@@ -1,7 +1,7 @@
-from Homework4.data_loader import dataset_iris, dataset_2d_10c
-from Homework4.data_utils import normalize
-from Homework4.second_task.elbow import do_hierarchical_clustering, do_k_means_clustering
-from Homework4.second_task.index import do_k_means_clustering_with_index, do_hierarchical_clustering_with_index
+from src.data_loader import dataset_iris, dataset_2d_10c
+from src.data_utils import normalize
+from src.second_task.elbow import do_hierarchical_clustering, do_k_means_clustering
+from src.second_task.index import do_k_means_clustering_with_index, do_hierarchical_clustering_with_index
 
 
 def elbow():

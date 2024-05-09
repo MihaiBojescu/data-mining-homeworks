@@ -1,10 +1,10 @@
 import numpy as np
-from Homework4.data_loader import dataset_obesity
-from Homework4.second_task.elbow import do_hierarchical_clustering, do_k_means_clustering
-from Homework4.third_task.clustering import dbscan_clustering_obesity, hierarchical_clustering_obesity, k_means_clustering_obesity
-from Homework4.visualize import plot_data, plot_contingency_matrix
-from Homework4.data_utils import normalize
-from Homework4.metrics import get_adjusted_random_index
+from src.data_loader import dataset_obesity
+from src.second_task.elbow import do_hierarchical_clustering, do_k_means_clustering
+from src.third_task.clustering import dbscan_clustering_obesity, hierarchical_clustering_obesity, k_means_clustering_obesity
+from src.visualize import plot_data, plot_contingency_matrix
+from src.data_utils import normalize
+from src.metrics import get_adjusted_random_index
 
 
 def obesity_tasks():
