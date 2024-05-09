@@ -23,8 +23,8 @@ from typing import Optional
 
 def main():
     cluster_on_datasets()
-    # som_on_iris()
-    # som_on_iris((15, 15))
+    som_on_iris()
+    som_on_iris((15, 15))
 
 
 def cluster_on_datasets():
