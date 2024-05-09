@@ -4,6 +4,11 @@ from src.second_task.elbow import do_hierarchical_clustering, do_k_means_cluster
 from src.second_task.index import do_k_means_clustering_with_index, do_hierarchical_clustering_with_index
 
 
+def main():
+    elbow()
+    silhouette_width()
+
+
 def elbow():
     features_iris, labels_iris = dataset_iris()
     features_iris = normalize(features_iris)
@@ -35,5 +40,4 @@ def silhouette_width():
 
 
 if __name__ == "__main__":
-    #elbow()
-    silhouette_width()
+    main()

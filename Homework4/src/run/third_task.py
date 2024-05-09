@@ -7,6 +7,10 @@ from src.data_utils import normalize
 from src.metrics import get_adjusted_random_index
 
 
+def main():
+    obesity_tasks()
+
+
 def obesity_tasks():
     features, labels = dataset_obesity()
     #features = normalize(features)
@@ -24,4 +28,4 @@ def obesity_tasks():
 
 
 if __name__ == "__main__":
-    obesity_tasks()
+    main()
