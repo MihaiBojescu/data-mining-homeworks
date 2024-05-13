@@ -1,6 +1,8 @@
+from typing import Optional
+
 from src.data_loader import (
-    dataset_iris,
     dataset_2d_10c,
+    dataset_iris,
     dataset_long,
     dataset_order2_3clust,
     dataset_smile,
@@ -8,17 +10,17 @@ from src.data_loader import (
 )
 from src.data_utils import normalize
 from src.first_task.cluster import (
-    Dataset,
     Cluster,
-    run_k_means,
+    Dataset,
+    build_cluster_plots,
+    run_dbscan,
     run_em_gmm,
     run_hierarchical_clustering,
-    build_cluster_plots,
+    run_k_means,
 )
-from src.first_task.som import train_som, plot_u_matrix, plot_torus, k_means
+from src.first_task.som import k_means, plot_torus, plot_u_matrix, train_som
 from src.metrics import get_adjusted_random_index
 from src.visualize import plot_data
-from typing import Optional
 
 
 def main():
@@ -58,6 +60,7 @@ def cluster_on_datasets():
         clusters_hierarchical_ward_linkage = run_hierarchical_clustering(
             x=features, linkage="ward", nr_of_clusters=dataset.nr_of_clusters
         )
+        clusters_dbscan = run_dbscan(x=features)
 
         build_cluster_plots(
             x=features,
@@ -87,6 +90,11 @@ def cluster_on_datasets():
                     title=f"Hierarchical, ward linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_ward_linkage,
+                ),
+                Cluster(
+                    title=f"Density-based scanning",
+                    y=labels,
+                    y_hat=clusters_dbscan,
                 ),
             ],
             title=f"Clusters for {dataset.title}, {dataset.nr_of_clusters} clusters",
