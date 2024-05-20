@@ -72,27 +72,27 @@ def cluster_on_datasets():
                     y_hat=clusters_em_gmm,
                 ),
                 Cluster(
-                    title="Hierarchical, single linkage",
+                    title="Hierarchical, \nsingle linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_single_linkage,
                 ),
                 Cluster(
-                    title="Hierarchical, average linkage",
+                    title="Hierarchical, \naverage linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_average_linkage,
                 ),
                 Cluster(
-                    title="Hierarchical, complete linkage",
+                    title="Hierarchical, \ncomplete linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_complete_linkage,
                 ),
                 Cluster(
-                    title=f"Hierarchical, ward linkage",
+                    title=f"Hierarchical, \nward linkage",
                     y=labels,
                     y_hat=clusters_hierarchical_ward_linkage,
                 ),
                 Cluster(
-                    title=f"Density-based scanning",
+                    title=f"Density-based \nscanning",
                     y=labels,
                     y_hat=clusters_dbscan,
                 ),
