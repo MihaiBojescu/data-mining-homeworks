@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 from Homework5.multivariate.isolation_forest import IsolationForestOutlierDetector
 from Homework5.multivariate.autoencoder import AutoencoderOutlierDetector
 from Homework5.multivariate.local_outlier_factor import LocalOutlierFactorOutlierDetector
@@ -6,6 +8,7 @@ from Homework5.data_utils import normalize
 from Homework5.visualize import pair_plot_6_bins, pair_plot_2_bins
 from Homework5.combine_predictions import combine_predictions
 from sklearn.preprocessing import MinMaxScaler
+import seaborn as sns
 import numpy as np
 
 
@@ -86,7 +89,17 @@ def run_multivariate():
     pair_plot_2_bins(features, combined_results,
                      ["Weight", "Height", "Age", "FAF", "Male"], "Combined results outliers")
 
-    print("Da")
+    thresholds_metrics = {
+        "values": [isolation_forest_threshold, autoencoder_threshold, local_outlier_factor_threshold],
+        "names": ["Isolation forest threshold (Scaled)", "Autoencoder threshold (Scaled)", "Local outlier factor threshold (Scaled)"]
+    }
+
+    ax = sns.barplot(thresholds_metrics, x="names", y="values")
+    ax.set_title("Thresholds")
+
+    plt.xticks(rotation=45)
+    ax.figure.tight_layout()
+    plt.show()
 
 
 if __name__ == "__main__":
