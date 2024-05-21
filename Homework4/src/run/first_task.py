@@ -60,7 +60,8 @@ def cluster_on_datasets():
         clusters_hierarchical_ward_linkage = run_hierarchical_clustering(
             x=features, linkage="ward", nr_of_clusters=dataset.nr_of_clusters
         )
-        clusters_dbscan = run_dbscan(x=features)
+        clusters_dbscan1 = run_dbscan(x=features, eps=0.15, min_samples=dataset.nr_of_clusters)
+        clusters_dbscan2 = run_dbscan(x=features, eps=0.5, min_samples=5)
 
         build_cluster_plots(
             x=features,
@@ -92,9 +93,14 @@ def cluster_on_datasets():
                     y_hat=clusters_hierarchical_ward_linkage,
                 ),
                 Cluster(
-                    title=f"Density-based scanning",
+                    title=f"Density-based scanning 1",
                     y=labels,
-                    y_hat=clusters_dbscan,
+                    y_hat=clusters_dbscan1,
+                ),
+                Cluster(
+                    title=f"Density-based scanning 2",
+                    y=labels,
+                    y_hat=clusters_dbscan2,
                 ),
             ],
             title=f"Clusters for {dataset.title}, {dataset.nr_of_clusters} clusters",
