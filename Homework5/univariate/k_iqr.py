@@ -1,6 +1,13 @@
+import typing as t
 import numpy as np
 
-def get_outliers_k_iqr(data: np.ndarray[float], q1: float = 25, q3: float = 75, k_iqr: float = 1.5):
+
+def get_outliers_k_iqr(
+    data: np.ndarray[t.Literal["N"], float],
+    q1: float = 25,
+    q3: float = 75,
+    k_iqr: float = 1.5,
+):
     data = np.array(data).copy()
     data.sort()
 
