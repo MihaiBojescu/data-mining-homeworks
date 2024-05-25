@@ -57,13 +57,13 @@ def run_hierarchical_clustering(
     ).fit_predict(X=x)
 
 
-def run_dbscan(x: list[int]):
+def run_dbscan(x: list[int], eps: float = 0.5, min_samples: int = 5):
     """
     Note:
        Density-based scanning does not accept a number of clusters in advance.
        Rather, it infers the number of clusters.
     """
-    return DBSCAN(eps=0.5, min_samples=5).fit_predict(X=x)
+    return DBSCAN(eps=eps, min_samples=min_samples).fit_predict(X=x)
 
 
 def build_cluster_plots(
