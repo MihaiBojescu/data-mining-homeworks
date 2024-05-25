@@ -173,5 +173,7 @@ def dataset_obesity() -> tuple[pd.DataFrame, np.array]:
 
     features = features.drop("Female", axis=1)
 
+    features = features[["Age", "Weight", "Height", "Male", "FAF"]]
+
     return features, labels.to_numpy()
 
