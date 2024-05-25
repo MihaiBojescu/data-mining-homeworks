@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 
+from Homework5.univariate.mean_k_sd import get_outliers_mean_k_sd
+from Homework5.univariate.k_iqr import get_outliers_k_iqr
 from Homework5.multivariate.isolation_forest import IsolationForestOutlierDetector
 from Homework5.multivariate.autoencoder import AutoencoderOutlierDetector
 from Homework5.multivariate.local_outlier_factor import LocalOutlierFactorOutlierDetector
@@ -11,6 +13,17 @@ from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
 import numpy as np
 
+
+
+def run_univariate():
+    features, labels = dataset_obesity()
+    features_to_train = normalize(features.to_numpy())
+
+    for feature in features:
+        outliers_mean_k_sd = get_outliers_mean_k_sd(data=features[feature], k=3)
+        inliers_mean_k_sd = features[feature][~np.in1d(features[feature], outliers_mean_k_sd)]
+        outliers_k_iqr = get_outliers_k_iqr(data=features[feature], k_iqr=1.5)
+        inliers_k_iqr = features[feature][~np.in1d(features[feature], outliers_k_iqr)]
 
 def __log_smooth_distribution(outlier_scores: np.array, deg: int):
     outlier_scores = MinMaxScaler(feature_range=(1, deg)).fit_transform(outlier_scores.reshape(-1, 1))
@@ -103,4 +116,5 @@ def run_multivariate():
 
 
 if __name__ == "__main__":
+    run_univariate()
     run_multivariate()
