@@ -10,7 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
 
 
-PARENT_DIR = str(os.path.join(Path(__file__).parent.absolute()))
+PARENT_DIR = str(os.path.join(Path(__file__).parent.parent.absolute()))
 
 
 # Obesity Dataset

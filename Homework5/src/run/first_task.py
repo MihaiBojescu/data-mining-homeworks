@@ -1,19 +1,19 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from Homework5.univariate.mean_k_sd import get_outliers_mean_k_sd
-from Homework5.univariate.k_iqr import get_outliers_k_iqr
-from Homework5.univariate.plot import plot_univariate
-from Homework5.univariate.normalise import normalise
-from Homework5.multivariate.isolation_forest import IsolationForestOutlierDetector
-from Homework5.multivariate.autoencoder import AutoencoderOutlierDetector
-from Homework5.multivariate.local_outlier_factor import (
+from Homework5.src.univariate.mean_k_sd import get_outliers_mean_k_sd
+from Homework5.src.univariate.k_iqr import get_outliers_k_iqr
+from Homework5.src.univariate.plot import plot_univariate
+from Homework5.src.univariate.normalise import normalise
+from Homework5.src.multivariate.isolation_forest import IsolationForestOutlierDetector
+from Homework5.src.multivariate.autoencoder import AutoencoderOutlierDetector
+from Homework5.src.multivariate.local_outlier_factor import (
     LocalOutlierFactorOutlierDetector,
 )
-from Homework5.data_loader import dataset_obesity
-from Homework5.data_utils import normalize
-from Homework5.visualize import pair_plot_6_bins, pair_plot_2_bins
-from Homework5.combine_predictions import combine_predictions
+from Homework5.src.data_loader import dataset_obesity
+from Homework5.src.data_utils import normalize
+from Homework5.src.visualize import pair_plot_6_bins, pair_plot_2_bins
+from Homework5.src.combine_predictions import combine_predictions
 from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
 import numpy as np
@@ -24,7 +24,7 @@ def main():
     columns = ["Weight", "Height", "Age", "FAF", "Male"]
     autoencoder_model_state_dict_path = "first_task_model.pt"
 
-    run_univariate(features=features, labels=labels)
+    # run_univariate(features=features, labels=labels)
     run_multivariate(
         features=features,
         labels=labels,
@@ -35,6 +35,7 @@ def main():
 
 def run_univariate(features: pd.DataFrame, labels: np.array):
     normalised_features = [normalise(features[feature]) for feature in features]
+    outliers_results = {}
 
     for i, feature in enumerate(features):
         outliers_mean_2_sd = get_outliers_mean_k_sd(data=features[feature], k=2)
@@ -81,6 +82,17 @@ def run_univariate(features: pd.DataFrame, labels: np.array):
             outliers=outliers_1_5_iqr_normalised,
         )
 
+        outliers_results[feature] = {
+            "outliers_mean_2_sd": outliers_mean_2_sd,
+            "outliers_mean_2_sd_normalised": outliers_mean_2_sd_normalised,
+            "outliers_mean_3_sd": outliers_mean_3_sd,
+            "outliers_mean_3_sd_normalised": outliers_mean_3_sd_normalised,
+            "outliers_1_5_iqr": outliers_1_5_iqr,
+            "outliers_1_5_iqr_normalised": outliers_1_5_iqr_normalised,
+        }
+
+    return outliers_results
+
 
 def __log_smooth_distribution(outlier_scores: np.array, deg: int):
     outlier_scores = MinMaxScaler(feature_range=(1, deg)).fit_transform(
@@ -119,7 +131,7 @@ def run_isolation_forest(
         "Isolation Forest Outliers",
     )
 
-    return outlier_scores, outlier_score_threshold
+    return outliers, outlier_scores, outlier_score_threshold
 
 
 def run_autoencoder(
@@ -152,7 +164,7 @@ def run_autoencoder(
         "Autoencoder Outliers",
     )
 
-    return outlier_scores, outlier_score_threshold
+    return outliers, outlier_scores, outlier_score_threshold
 
 
 def run_local_outlier_factor(
@@ -184,7 +196,7 @@ def run_local_outlier_factor(
         "Local Outlier Factor Outliers",
     )
 
-    return outlier_scores, outlier_score_threshold
+    return outliers, outlier_scores, outlier_score_threshold
 
 
 def run_multivariate(
@@ -195,15 +207,17 @@ def run_multivariate(
 ):
     features_to_train = normalize(features.to_numpy())
 
-    isolation_forest_results, isolation_forest_threshold = run_isolation_forest(
-        features, features_to_train, columns
+    isolation_forest_outliers, isolation_forest_results, isolation_forest_threshold = (
+        run_isolation_forest(features, features_to_train, columns)
     )
-    autoencoder_results, autoencoder_threshold = run_autoencoder(
+    autoencoder_outliers, autoencoder_results, autoencoder_threshold = run_autoencoder(
         features, features_to_train, columns, autoencoder_model_state_dict_path
     )
-    local_outlier_factor_results, local_outlier_factor_threshold = (
-        run_local_outlier_factor(features, features_to_train, columns)
-    )
+    (
+        local_outlier_factor_outliers,
+        local_outlier_factor_results,
+        local_outlier_factor_threshold,
+    ) = run_local_outlier_factor(features, features_to_train, columns)
 
     combined_results = combine_predictions(
         [
@@ -240,6 +254,12 @@ def run_multivariate(
     plt.xticks(rotation=45)
     ax.figure.tight_layout()
     plt.show()
+
+    return {
+        "isolation_forest_outliers": isolation_forest_outliers,
+        "autoencoder_outliers": autoencoder_outliers,
+        "local_outlier_factor_outliers": local_outlier_factor_outliers,
+    }
 
 
 if __name__ == "__main__":
