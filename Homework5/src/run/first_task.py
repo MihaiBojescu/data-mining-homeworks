@@ -24,7 +24,7 @@ def main():
     columns = ["Weight", "Height", "Age", "FAF", "Male"]
     autoencoder_model_state_dict_path = "first_task_model.pt"
 
-    # run_univariate(features=features, labels=labels)
+    run_univariate(features=features, labels=labels)
     run_multivariate(
         features=features,
         labels=labels,
