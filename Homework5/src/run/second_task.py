@@ -1,22 +1,23 @@
 from src.data_loader import dataset_wine
 from src.run.first_task import run_univariate, run_multivariate
+import matplotlib.pyplot as plt
 
 
 def main():
     features, labels = dataset_wine()
     columns = [
-        "Alcohol",
-        "Malic acid",
+        # "Alcohol",
+        # "Malic acid",
         "Ash",
         "Alcalinity of ash",
         "Magnesium",
-        "Total phenols",
-        "Flavanoids",
-        "Nonflavanoid phenols",
+        # "Total phenols",
+        # "Flavanoids",
+        # "Nonflavanoid phenols",
         "Proanthocyanins",
         "Color intensity",
-        "Hue",
-        "OD280/OD315 of diluted wines",
+        # "Hue",
+        # "OD280/OD315 of diluted wines",
         "Proline",
     ]
     autoencoder_model_state_dict_path = "second_task_model.pt"
