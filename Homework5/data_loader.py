@@ -5,6 +5,7 @@ import numpy as np
 from pathlib import Path
 import typing as t
 import math
+from scipy.io import loadmat
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
 
@@ -177,3 +178,5 @@ def dataset_obesity() -> tuple[pd.DataFrame, np.array]:
 
     return features, labels.to_numpy()
 
+def dataset_wine():
+    return loadmat(os.path.join(PARENT_DIR, "./data/wine.mat"))
