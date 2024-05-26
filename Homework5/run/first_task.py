@@ -3,9 +3,12 @@ import matplotlib.pyplot as plt
 from Homework5.univariate.mean_k_sd import get_outliers_mean_k_sd
 from Homework5.univariate.k_iqr import get_outliers_k_iqr
 from Homework5.univariate.plot import plot_univariate
+from Homework5.univariate.normalise import normalise
 from Homework5.multivariate.isolation_forest import IsolationForestOutlierDetector
 from Homework5.multivariate.autoencoder import AutoencoderOutlierDetector
-from Homework5.multivariate.local_outlier_factor import LocalOutlierFactorOutlierDetector
+from Homework5.multivariate.local_outlier_factor import (
+    LocalOutlierFactorOutlierDetector,
+)
 from Homework5.data_loader import dataset_obesity
 from Homework5.data_utils import normalize
 from Homework5.visualize import pair_plot_6_bins, pair_plot_2_bins
@@ -15,18 +18,55 @@ import seaborn as sns
 import numpy as np
 
 
-
-
 def run_univariate():
     features, labels = dataset_obesity()
-    features_to_train = normalize(features.to_numpy())
+    normalised_features = [normalise(features[feature]) for feature in features]
 
-    for feature in features:
-        outliers_mean_k_sd = get_outliers_mean_k_sd(data=features[feature], k=3)
-        outliers_k_iqr = get_outliers_k_iqr(data=features[feature], k_iqr=1.5)
+    for i, feature in enumerate(features):
+        outliers_mean_2_sd = get_outliers_mean_k_sd(data=features[feature], k=2)
+        outliers_mean_2_sd_normalised = get_outliers_mean_k_sd(
+            data=normalised_features[i], k=2
+        )
+        outliers_mean_3_sd = get_outliers_mean_k_sd(data=features[feature], k=3)
+        outliers_mean_3_sd_normalised = get_outliers_mean_k_sd(
+            data=normalised_features[i], k=3
+        )
+        outliers_1_5_iqr = get_outliers_k_iqr(data=features[feature], k_iqr=1.5)
+        outliers_1_5_iqr_normalised = get_outliers_k_iqr(
+            data=normalised_features[i], k_iqr=1.5
+        )
 
-        plot_univariate(title=f"{feature} Outliers: Mean +/- k*sd", data=features[feature], outliers=outliers_mean_k_sd)
-        plot_univariate(title=f"{feature} Outliers: 1.5 IQR", data=features[feature], outliers=outliers_k_iqr)
+        plot_univariate(
+            title=f"{feature} outliers: Mean +/- 2*sd",
+            data=features[feature],
+            outliers=outliers_mean_2_sd,
+        )
+        plot_univariate(
+            title=f"{feature} outliers (normalised): Mean +/- 2*sd",
+            data=normalised_features[i],
+            outliers=outliers_mean_2_sd_normalised,
+        )
+        plot_univariate(
+            title=f"{feature} outliers: Mean +/- 3*sd",
+            data=features[feature],
+            outliers=outliers_mean_3_sd,
+        )
+        plot_univariate(
+            title=f"{feature} outliers (normalised): Mean +/- 3*sd",
+            data=normalised_features[i],
+            outliers=outliers_mean_3_sd_normalised,
+        )
+        plot_univariate(
+            title=f"{feature} outliers: 1.5 IQR",
+            data=features[feature],
+            outliers=outliers_1_5_iqr,
+        )
+        plot_univariate(
+            title=f"{feature} outliers (normalised): 1.5 IQR",
+            data=normalised_features[i],
+            outliers=outliers_1_5_iqr_normalised,
+        )
+
 
 def __log_smooth_distribution(outlier_scores: np.array, deg: int):
     outlier_scores = MinMaxScaler(feature_range=(1, deg)).fit_transform(outlier_scores.reshape(-1, 1))
