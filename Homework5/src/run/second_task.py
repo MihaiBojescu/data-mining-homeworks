@@ -1,5 +1,5 @@
-from Homework5.src.data_loader import dataset_wine
-from Homework5.src.run.first_task import run_univariate, run_multivariate
+from src.data_loader import dataset_wine
+from src.run.first_task import run_univariate, run_multivariate
 
 
 def main():

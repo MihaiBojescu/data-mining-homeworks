@@ -1,19 +1,19 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from Homework5.src.univariate.mean_k_sd import get_outliers_mean_k_sd
-from Homework5.src.univariate.k_iqr import get_outliers_k_iqr
-from Homework5.src.univariate.plot import plot_univariate
-from Homework5.src.univariate.normalise import normalise
-from Homework5.src.multivariate.isolation_forest import IsolationForestOutlierDetector
-from Homework5.src.multivariate.autoencoder import AutoencoderOutlierDetector
-from Homework5.src.multivariate.local_outlier_factor import (
+from src.univariate.mean_k_sd import get_outliers_mean_k_sd
+from src.univariate.k_iqr import get_outliers_k_iqr
+from src.univariate.plot import plot_univariate
+from src.univariate.normalise import normalise
+from src.multivariate.isolation_forest import IsolationForestOutlierDetector
+from src.multivariate.autoencoder import AutoencoderOutlierDetector
+from src.multivariate.local_outlier_factor import (
     LocalOutlierFactorOutlierDetector,
 )
-from Homework5.src.data_loader import dataset_obesity
-from Homework5.src.data_utils import normalize
-from Homework5.src.visualize import pair_plot_6_bins, pair_plot_2_bins
-from Homework5.src.combine_predictions import combine_predictions
+from src.data_loader import dataset_obesity
+from src.data_utils import normalize
+from src.visualize import pair_plot_6_bins, pair_plot_2_bins
+from src.combine_predictions import combine_predictions
 from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
 import numpy as np
