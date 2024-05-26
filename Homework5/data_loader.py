@@ -166,11 +166,16 @@ class DatasetManager:
 
 
 def dataset_obesity() -> tuple[pd.DataFrame, np.array]:
-    dataset_manager = DatasetManager(os.path.join(PARENT_DIR, "./data/ObesityDataSet.csv"))
-    dataset = pd.DataFrame.from_records(data=[vars(entry) for entry in dataset_manager.load_as_obj_list()])
+    dataset_manager = DatasetManager(
+        os.path.join(PARENT_DIR, "./data/ObesityDataSet.csv")
+    )
+    dataset = pd.DataFrame.from_records(
+        data=[vars(entry) for entry in dataset_manager.load_as_obj_list()]
+    )
 
-    features, labels = DatasetManager.process_dataframe_one_hot(dataset,
-                                                                ["Height", "Weight", "Age", "FAF", "Gender"])
+    features, labels = DatasetManager.process_dataframe_one_hot(
+        dataset, ["Height", "Weight", "Age", "FAF", "Gender"]
+    )
 
     features = features.drop("Female", axis=1)
 
@@ -178,10 +183,31 @@ def dataset_obesity() -> tuple[pd.DataFrame, np.array]:
 
     return features, labels.to_numpy()
 
+
 def dataset_wine() -> tuple[pd.DataFrame, np.array]:
     data = loadmat(os.path.join(PARENT_DIR, "./data/wine.mat"))
+    feature_categories = [
+        "Alcohol",
+        "Malic acid",
+        "Ash",
+        "Alcalinity of ash",
+        "Magnesium",
+        "Total phenols",
+        "Flavanoids",
+        "Nonflavanoid phenols",
+        "Proanthocyanins",
+        "Color intensity",
+        "Hue",
+        "OD280/OD315 of diluted wines",
+        "Proline",
+    ]
 
-    features = data["X"]
+    features = pd.DataFrame()
     labels = data["y"][:, 0]
+    
+    axis = 0
+    for feature_category in feature_categories:
+        features[feature_category] = [entry[axis] for entry in data["X"]]
+        axis += 1
 
     return features, labels
