@@ -13,6 +13,8 @@ def plot_univariate(
 
     fig = plt.figure()
     fig.suptitle(title)
+    fig.set_figheight(12)
+    fig.set_figwidth(8)
 
     gs = gridspec.GridSpec(5, 2, figure=fig, wspace=0.5, hspace=0.5)
 
@@ -46,8 +48,6 @@ def plot_univariate(
 
     axs5 = plt.subplot(gs[3:, 1])
     axs5.set_title("Inliers + outliers = total")
-    axs5.text(0.5, 0.5, f"{len(inliers)} + {len(outliers)} = {len(data)}", fontsize=23, ha='center')
+    axs5.text(0.5, 0.35, f"{len(inliers)}\n+ {len(outliers)}\n= {len(data)}", fontsize=23, ha='center')
 
     fig.show()
-
-    plt.waitforbuttonpress()
