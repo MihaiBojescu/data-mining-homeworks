@@ -178,5 +178,10 @@ def dataset_obesity() -> tuple[pd.DataFrame, np.array]:
 
     return features, labels.to_numpy()
 
-def dataset_wine():
-    return loadmat(os.path.join(PARENT_DIR, "./data/wine.mat"))
+def dataset_wine() -> tuple[pd.DataFrame, np.array]:
+    data = loadmat(os.path.join(PARENT_DIR, "./data/wine.mat"))
+
+    features = data["X"]
+    labels = data["y"][:, 0]
+
+    return features, labels
