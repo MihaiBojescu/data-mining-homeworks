@@ -1,12 +1,11 @@
 import os.path
-
+import typing as t
 import pandas as pd
 import numpy as np
 import torch.nn
 from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
 from pathlib import Path
-from typing import Optional
 
 PARENT_DIR = str(os.path.join(Path(__file__).parent.absolute()))
 
@@ -29,27 +28,28 @@ class AutoencoderOutlierDetector:
     def __init__(self):
         self.__model: AE = None
 
-    @staticmethod
-    def __get_model_path() -> Optional[str]:
-        model_path = os.path.join(PARENT_DIR, "model.pt")
-        if os.path.exists(model_path):
-            return model_path
-        return None
-
-    def build(self, features: np.array):
+    def build(self, features: np.array, model_state_dict_path: str):
         dataset = NPArrDataset(features)
         dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
 
         self.__model = AE(features.shape[1])
-        model_state_dict_path = self.__get_model_path()
+        model_state_dict_full_path = self.__get_model_path(model_state_dict_path)
 
-        if model_state_dict_path is not None:
+        if model_state_dict_full_path is not None:
             print("Loading Autoencoder from Disk")
-            self.__model.load_state_dict(torch.load(model_state_dict_path))
+            self.__model.load_state_dict(torch.load(model_state_dict_full_path))
             self.__model.eval()
         else:
             self.__train(dataloader, 150)
-            torch.save(self.__model.state_dict(), os.path.join(PARENT_DIR, "model.pt"))
+            torch.save(self.__model.state_dict(), os.path.join(PARENT_DIR, model_state_dict_path))
+
+    def __get_model_path(self, model_state_dict_path: str) -> t.Optional[str]:
+        model_state_dict_full_path = os.path.join(PARENT_DIR, model_state_dict_path)
+
+        if not os.path.exists(model_state_dict_full_path):
+            return None
+        
+        return model_state_dict_full_path
 
     def __train(self, dataloader: DataLoader, nr_of_epochs: int):
         tbar = tqdm(tuple(range(nr_of_epochs)))

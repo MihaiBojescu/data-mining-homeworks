@@ -22,9 +22,15 @@ import numpy as np
 def main():
     features, labels = dataset_obesity()
     columns = ["Weight", "Height", "Age", "FAF", "Male"]
+    autoencoder_model_state_dict_path = "first_task_model.pt"
 
     run_univariate(features=features, labels=labels)
-    run_multivariate(features=features, labels=labels, columns=columns)
+    run_multivariate(
+        features=features,
+        labels=labels,
+        columns=columns,
+        autoencoder_model_state_dict_path=autoencoder_model_state_dict_path,
+    )
 
 
 def run_univariate(features: pd.DataFrame, labels: np.array):
@@ -117,11 +123,14 @@ def run_isolation_forest(
 
 
 def run_autoencoder(
-    features: np.array, features_to_train: np.array, columns: list[str]
+    features: np.array,
+    features_to_train: np.array,
+    columns: list[str],
+    model_state_dict_path: str,
 ) -> tuple[np.array, float]:
 
     autoencoder_algorithm = AutoencoderOutlierDetector()
-    autoencoder_algorithm.build(features_to_train)
+    autoencoder_algorithm.build(features_to_train, model_state_dict_path)
     outliers = autoencoder_algorithm.predict(features_to_train)
 
     outlier_scores = outliers["outlier_scores"].to_numpy()
@@ -178,14 +187,19 @@ def run_local_outlier_factor(
     return outlier_scores, outlier_score_threshold
 
 
-def run_multivariate(features: pd.DataFrame, labels: np.array, columns: list[str]):
+def run_multivariate(
+    features: pd.DataFrame,
+    labels: np.array,
+    columns: list[str],
+    autoencoder_model_state_dict_path: str,
+):
     features_to_train = normalize(features.to_numpy())
 
     isolation_forest_results, isolation_forest_threshold = run_isolation_forest(
         features, features_to_train, columns
     )
     autoencoder_results, autoencoder_threshold = run_autoencoder(
-        features, features_to_train, columns
+        features, features_to_train, columns, autoencoder_model_state_dict_path
     )
     local_outlier_factor_results, local_outlier_factor_threshold = (
         run_local_outlier_factor(features, features_to_train, columns)
