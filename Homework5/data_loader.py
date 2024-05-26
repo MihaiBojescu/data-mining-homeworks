@@ -203,7 +203,7 @@ def dataset_wine() -> tuple[pd.DataFrame, np.array]:
     ]
 
     features = pd.DataFrame()
-    labels = data["y"][:, 0]
+    labels = data["y"]
     
     axis = 0
     for feature_category in feature_categories:
