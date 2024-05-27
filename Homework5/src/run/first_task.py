@@ -131,7 +131,7 @@ def run_isolation_forest(
         "Isolation Forest Outliers",
     )
 
-    return outliers, outlier_scores, outlier_score_threshold
+    return outlier_scores, outlier_score_threshold
 
 
 def run_autoencoder(
@@ -164,7 +164,7 @@ def run_autoencoder(
         "Autoencoder Outliers",
     )
 
-    return outliers, outlier_scores, outlier_score_threshold
+    return outlier_scores, outlier_score_threshold
 
 
 def run_local_outlier_factor(
@@ -196,7 +196,7 @@ def run_local_outlier_factor(
         "Local Outlier Factor Outliers",
     )
 
-    return outliers, outlier_scores, outlier_score_threshold
+    return outlier_scores, outlier_score_threshold
 
 
 def run_multivariate(
@@ -207,14 +207,13 @@ def run_multivariate(
 ):
     features_to_train = normalize(features.to_numpy())
 
-    isolation_forest_outliers, isolation_forest_results, isolation_forest_threshold = (
-        run_isolation_forest(features, features_to_train, columns)
+    isolation_forest_results, isolation_forest_threshold = run_isolation_forest(
+        features, features_to_train, columns
     )
-    autoencoder_outliers, autoencoder_results, autoencoder_threshold = run_autoencoder(
+    autoencoder_results, autoencoder_threshold = run_autoencoder(
         features, features_to_train, columns, autoencoder_model_state_dict_path
     )
     (
-        local_outlier_factor_outliers,
         local_outlier_factor_results,
         local_outlier_factor_threshold,
     ) = run_local_outlier_factor(features, features_to_train, columns)
@@ -256,9 +255,9 @@ def run_multivariate(
     plt.show()
 
     return {
-        "isolation_forest_outliers": isolation_forest_outliers,
-        "autoencoder_outliers": autoencoder_outliers,
-        "local_outlier_factor_outliers": local_outlier_factor_outliers,
+        "isolation_forest_outliers": [[entry] for entry in (isolation_forest_results > isolation_forest_threshold).astype(int)],
+        "autoencoder_outliers": [[entry] for entry in (autoencoder_results > autoencoder_threshold).astype(int)],
+        "local_outlier_factor_outliers": [[entry] for entry in (local_outlier_factor_results > local_outlier_factor_threshold).astype(int)],
     }
 
 

@@ -7,6 +7,12 @@ from src.run.first_task import run_univariate, run_multivariate
 
 
 def main():
+    #
+    # Note for devs:
+    #
+    #   Unselected features are commented out, in case
+    #   they might be needed for later
+    #
     features, labels = dataset_wine()
     columns = [
         # "Alcohol",
@@ -34,13 +40,13 @@ def main():
     )
 
     confusion_results_isolation_forest = build_confusion_results(
-        convert_to_numbers(multivariate_outliers["isolation_forest_outliers"]), labels
+        multivariate_outliers["isolation_forest_outliers"], labels
     )
     confusion_results_autoencoder = build_confusion_results(
-        convert_to_numbers(multivariate_outliers["autoencoder_outliers"]), labels
+        multivariate_outliers["autoencoder_outliers"], labels
     )
     confusion_results_local_outlier_factor = build_confusion_results(
-        convert_to_numbers(multivariate_outliers["local_outlier_factor_outliers"]),
+        multivariate_outliers["local_outlier_factor_outliers"],
         labels,
     )
 
@@ -59,10 +65,6 @@ def main():
     print(f"Local outlier factor recall: {local_outlier_factor_recall:.2f}")
 
 
-def convert_to_numbers(data: pd.DataFrame):
-    return np.array([[1 if entry >= 0.5 else 0] for entry in data["outlier_scores"]])
-
-
 @dataclass
 class ConfusionResults:
     true_positives: int = 0
@@ -77,7 +79,16 @@ def build_confusion_results(
     confusion_results = ConfusionResults()
 
     for y_entry, y_hat_entry in zip(y, y_hat):
-        confusion_result_entry = (y_entry[0] == 1, y_hat_entry[0] == 1)
+        #
+        # Note for devs:
+        #
+        #   1 = outlier
+        #   0 = inlier
+        #
+        #   Thus, true positives are instances when y_entry == 0, and y_hat_entry == 0.
+        #   The other values can be inferred.
+        #
+        confusion_result_entry = (y_entry[0] == 0, y_hat_entry[0] == 0)
 
         if confusion_result_entry == (True, True):
             confusion_results.true_positives += 1
