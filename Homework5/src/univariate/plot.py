@@ -24,13 +24,13 @@ def plot_univariate(
 
     axs2 = plt.subplot(gs[1, :])
     axs2.set_title("Histogram: inliers vs outliers")
-    axs2.hist(x=inliers, color="blue")
-    axs2.hist(x=outliers, color="red")
+    axs2.hist(x=inliers, color="#C5D3FA")
+    axs2.hist(x=outliers, color="#E26952")
 
     axs3 = plt.subplot(gs[2, :])
     axs3.set_title("Plot on axis: inliers vs outliers")
-    axs3.scatter(x=inliers, y=[1 for _ in range(len(inliers))], c="blue")
-    axs3.scatter(x=outliers, y=[1 for _ in range(len(outliers))], c="red")
+    axs3.scatter(x=inliers, y=[1 for _ in range(len(inliers))], c="#C5D3FA")
+    axs3.scatter(x=outliers, y=[1 for _ in range(len(outliers))], c="#E26952")
 
     axs4 = plt.subplot(gs[3:, 0])
     axs4.set_title("Inliers vs outliers pie plot")
@@ -43,7 +43,7 @@ def plot_univariate(
             f"Inliers ({len(inliers) / len(data) * 100:.2f}%)",
             f"Outliers ({len(outliers) / len(data) * 100:.2f}%)",
         ],
-        colors=["blue", "red"],
+        colors=["#C5D3FA", "#E26952"],
     )
 
     axs5 = plt.subplot(gs[3:, 1])
