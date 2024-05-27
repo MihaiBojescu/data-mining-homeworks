@@ -56,7 +56,11 @@ def run_univariate(features: pd.DataFrame, labels: np.array):
             ],
             2,
         ).astype(int)
-        outliers_combined = [features[feature][i] for i in range(len(combined_results)) if combined_results[i][0] == 1]
+        outliers_combined = [
+            features[feature][i]
+            for i in range(len(combined_results))
+            if combined_results[i][0] == 1
+        ]
 
         plot_univariate(
             title=f"{feature} outliers: Mean +/- 2*sd",
@@ -101,15 +105,73 @@ def make_univariate_output_labels(
     return np.array([[1 if entry in outliers else 0] for entry in data])
 
 
-def __log_smooth_distribution(outlier_scores: np.array, deg: int):
-    outlier_scores = MinMaxScaler(feature_range=(1, deg)).fit_transform(
-        outlier_scores.reshape(-1, 1)
+def run_multivariate(
+    features: pd.DataFrame,
+    labels: np.array,
+    columns: list[str],
+    autoencoder_model_state_dict_path: str,
+):
+    features_to_train = normalize(features.to_numpy())
+
+    isolation_forest_results, isolation_forest_threshold = run_isolation_forest(
+        features, features_to_train, columns
     )
-    outlier_scores = np.log2(outlier_scores)
-    outlier_scores = MinMaxScaler(feature_range=(0, 1)).fit_transform(
-        outlier_scores.reshape(-1, 1)
+    autoencoder_results, autoencoder_threshold = run_autoencoder(
+        features, features_to_train, columns, autoencoder_model_state_dict_path
     )
-    return outlier_scores.reshape(-1)
+    (
+        local_outlier_factor_results,
+        local_outlier_factor_threshold,
+    ) = run_local_outlier_factor(features, features_to_train, columns)
+
+    combined_results = combine_predictions(
+        [
+            isolation_forest_results > isolation_forest_threshold,
+            autoencoder_results > autoencoder_threshold,
+            local_outlier_factor_results > local_outlier_factor_threshold,
+        ],
+        2,
+    )
+
+    pair_plot_2_bins(
+        features,
+        combined_results,
+        columns,
+        "Combined results outliers, multivariate analysis",
+    )
+
+    thresholds_metrics = {
+        "values": [
+            isolation_forest_threshold,
+            autoencoder_threshold,
+            local_outlier_factor_threshold,
+        ],
+        "names": [
+            "Isolation forest threshold (Scaled)",
+            "Autoencoder threshold (Scaled)",
+            "Local outlier factor threshold (Scaled)",
+        ],
+    }
+
+    ax = sns.barplot(thresholds_metrics, x="names", y="values")
+    ax.set_title("Thresholds")
+
+    plt.xticks(rotation=45)
+    ax.figure.tight_layout()
+    plt.show()
+
+    return {
+        "isolation_forest_outliers": make_multivariate_output_labels(
+            results=isolation_forest_results, threshold=isolation_forest_threshold
+        ),
+        "autoencoder_outliers": make_multivariate_output_labels(
+            results=autoencoder_results, threshold=autoencoder_threshold
+        ),
+        "local_outlier_factor_outliers": make_multivariate_output_labels(
+            results=local_outlier_factor_results,
+            threshold=local_outlier_factor_threshold,
+        ),
+    }
 
 
 def run_isolation_forest(
@@ -206,79 +268,21 @@ def run_local_outlier_factor(
     return outlier_scores, outlier_score_threshold
 
 
-def run_multivariate(
-    features: pd.DataFrame,
-    labels: np.array,
-    columns: list[str],
-    autoencoder_model_state_dict_path: str,
-):
-    features_to_train = normalize(features.to_numpy())
-
-    isolation_forest_results, isolation_forest_threshold = run_isolation_forest(
-        features, features_to_train, columns
+def __log_smooth_distribution(outlier_scores: np.array, deg: int):
+    outlier_scores = MinMaxScaler(feature_range=(1, deg)).fit_transform(
+        outlier_scores.reshape(-1, 1)
     )
-    autoencoder_results, autoencoder_threshold = run_autoencoder(
-        features, features_to_train, columns, autoencoder_model_state_dict_path
+    outlier_scores = np.log2(outlier_scores)
+    outlier_scores = MinMaxScaler(feature_range=(0, 1)).fit_transform(
+        outlier_scores.reshape(-1, 1)
     )
-    (
-        local_outlier_factor_results,
-        local_outlier_factor_threshold,
-    ) = run_local_outlier_factor(features, features_to_train, columns)
+    return outlier_scores.reshape(-1)
 
-    combined_results = combine_predictions(
-        [
-            isolation_forest_results > isolation_forest_threshold,
-            autoencoder_results > autoencoder_threshold,
-            local_outlier_factor_results > local_outlier_factor_threshold,
-        ],
-        2,
-    )
 
-    pair_plot_2_bins(
-        features,
-        combined_results,
-        columns,
-        "Combined results outliers, multivariate analysis",
-    )
-
-    thresholds_metrics = {
-        "values": [
-            isolation_forest_threshold,
-            autoencoder_threshold,
-            local_outlier_factor_threshold,
-        ],
-        "names": [
-            "Isolation forest threshold (Scaled)",
-            "Autoencoder threshold (Scaled)",
-            "Local outlier factor threshold (Scaled)",
-        ],
-    }
-
-    ax = sns.barplot(thresholds_metrics, x="names", y="values")
-    ax.set_title("Thresholds")
-
-    plt.xticks(rotation=45)
-    ax.figure.tight_layout()
-    plt.show()
-
-    return {
-        "isolation_forest_outliers": [
-            [entry]
-            for entry in (isolation_forest_results > isolation_forest_threshold).astype(
-                int
-            )
-        ],
-        "autoencoder_outliers": [
-            [entry]
-            for entry in (autoencoder_results > autoencoder_threshold).astype(int)
-        ],
-        "local_outlier_factor_outliers": [
-            [entry]
-            for entry in (
-                local_outlier_factor_results > local_outlier_factor_threshold
-            ).astype(int)
-        ],
-    }
+def make_multivariate_output_labels(
+    results: np.ndarray[t.Literal["N"], float], threshold: float
+) -> np.ndarray[t.Literal["N", 1], int]:
+    return [[entry] for entry in (results > threshold).astype(int)]
 
 
 if __name__ == "__main__":
