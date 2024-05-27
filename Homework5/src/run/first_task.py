@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import typing as t
 
 from src.univariate.mean_k_sd import get_outliers_mean_k_sd
 from src.univariate.k_iqr import get_outliers_k_iqr
@@ -34,22 +35,28 @@ def main():
 
 
 def run_univariate(features: pd.DataFrame, labels: np.array):
-    normalised_features = [normalise(features[feature]) for feature in features]
     outliers_results = {}
 
     for i, feature in enumerate(features):
         outliers_mean_2_sd = get_outliers_mean_k_sd(data=features[feature], k=2)
-        outliers_mean_2_sd_normalised = get_outliers_mean_k_sd(
-            data=normalised_features[i], k=2
-        )
         outliers_mean_3_sd = get_outliers_mean_k_sd(data=features[feature], k=3)
-        outliers_mean_3_sd_normalised = get_outliers_mean_k_sd(
-            data=normalised_features[i], k=3
-        )
         outliers_1_5_iqr = get_outliers_k_iqr(data=features[feature], k_iqr=1.5)
-        outliers_1_5_iqr_normalised = get_outliers_k_iqr(
-            data=normalised_features[i], k_iqr=1.5
-        )
+
+        combined_results = combine_predictions(
+            [
+                make_univariate_output_labels(
+                    data=features[feature], outliers=outliers_mean_2_sd
+                ),
+                make_univariate_output_labels(
+                    data=features[feature], outliers=outliers_mean_3_sd
+                ),
+                make_univariate_output_labels(
+                    data=features[feature], outliers=outliers_1_5_iqr
+                ),
+            ],
+            2,
+        ).astype(int)
+        outliers_combined = [features[feature][i] for i in range(len(combined_results)) if combined_results[i][0] == 1]
 
         plot_univariate(
             title=f"{feature} outliers: Mean +/- 2*sd",
@@ -57,19 +64,9 @@ def run_univariate(features: pd.DataFrame, labels: np.array):
             outliers=outliers_mean_2_sd,
         )
         plot_univariate(
-            title=f"{feature} outliers (normalised): Mean +/- 2*sd",
-            data=normalised_features[i],
-            outliers=outliers_mean_2_sd_normalised,
-        )
-        plot_univariate(
             title=f"{feature} outliers: Mean +/- 3*sd",
             data=features[feature],
             outliers=outliers_mean_3_sd,
-        )
-        plot_univariate(
-            title=f"{feature} outliers (normalised): Mean +/- 3*sd",
-            data=normalised_features[i],
-            outliers=outliers_mean_3_sd_normalised,
         )
         plot_univariate(
             title=f"{feature} outliers: 1.5 IQR",
@@ -77,21 +74,31 @@ def run_univariate(features: pd.DataFrame, labels: np.array):
             outliers=outliers_1_5_iqr,
         )
         plot_univariate(
-            title=f"{feature} outliers (normalised): 1.5 IQR",
-            data=normalised_features[i],
-            outliers=outliers_1_5_iqr_normalised,
+            title=f"{feature} outliers: mean +/- k*sd + 1.5 IQR combined",
+            data=features[feature],
+            outliers=outliers_combined,
         )
 
         outliers_results[feature] = {
-            "outliers_mean_2_sd": outliers_mean_2_sd,
-            "outliers_mean_2_sd_normalised": outliers_mean_2_sd_normalised,
-            "outliers_mean_3_sd": outliers_mean_3_sd,
-            "outliers_mean_3_sd_normalised": outliers_mean_3_sd_normalised,
-            "outliers_1_5_iqr": outliers_1_5_iqr,
-            "outliers_1_5_iqr_normalised": outliers_1_5_iqr_normalised,
+            "outliers_mean_2_sd": make_univariate_output_labels(
+                data=features[feature], outliers=outliers_mean_2_sd
+            ),
+            "outliers_mean_3_sd": make_univariate_output_labels(
+                data=features[feature], outliers=outliers_mean_3_sd
+            ),
+            "outliers_1_5_iqr": make_univariate_output_labels(
+                data=features[feature], outliers=outliers_1_5_iqr
+            ),
+            "outliers_combined": combined_results,
         }
 
     return outliers_results
+
+
+def make_univariate_output_labels(
+    data: np.ndarray[t.Literal["N"], float], outliers: np.ndarray[t.Literal["N"], float]
+) -> np.ndarray[t.Literal["N", 1], int]:
+    return np.array([[1 if entry in outliers else 0] for entry in data])
 
 
 def __log_smooth_distribution(outlier_scores: np.array, deg: int):
@@ -231,7 +238,7 @@ def run_multivariate(
         features,
         combined_results,
         columns,
-        "Combined results outliers",
+        "Combined results outliers, multivariate analysis",
     )
 
     thresholds_metrics = {
@@ -255,9 +262,22 @@ def run_multivariate(
     plt.show()
 
     return {
-        "isolation_forest_outliers": [[entry] for entry in (isolation_forest_results > isolation_forest_threshold).astype(int)],
-        "autoencoder_outliers": [[entry] for entry in (autoencoder_results > autoencoder_threshold).astype(int)],
-        "local_outlier_factor_outliers": [[entry] for entry in (local_outlier_factor_results > local_outlier_factor_threshold).astype(int)],
+        "isolation_forest_outliers": [
+            [entry]
+            for entry in (isolation_forest_results > isolation_forest_threshold).astype(
+                int
+            )
+        ],
+        "autoencoder_outliers": [
+            [entry]
+            for entry in (autoencoder_results > autoencoder_threshold).astype(int)
+        ],
+        "local_outlier_factor_outliers": [
+            [entry]
+            for entry in (
+                local_outlier_factor_results > local_outlier_factor_threshold
+            ).astype(int)
+        ],
     }
 
 
